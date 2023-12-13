@@ -74,6 +74,11 @@ class User extends Authenticatable
         return $this->hasOne(RecuperarCuentaToken::class, "usuario", "id");
     }
 
+    public function misGrupos() : HasMany
+    {
+        return $this->hasMany(Grupo::class, "administrador", "id");
+    }
+
     /////////////////////////////
     ///// MÉTODOS ESTÁTICOS /////
     /////////////////////////////

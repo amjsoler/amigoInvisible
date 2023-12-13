@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\IntegranteController;
 use App\Http\Controllers\web\Authentication;
 use App\Models\User;
 use App\Notifications\PruebaBorrar;
@@ -54,6 +55,19 @@ Route::get("politica-de-privacidad", function(){
 Route::get("tutorial-eliminar-cuenta", function() {
     return view("tutorialEliminarCuenta");
 });
+
+
+
+/////////////////////////////
+///// RUTAS INTEGRANTES /////
+/////////////////////////////
+Route::get("/grupos/{grupo}/apuntarse/{hash}",
+    [IntegranteController::class, "getApuntarseGrupo"]
+);
+
+Route::post("/grupos/{grupo}/apuntarse/{hash}",
+    [IntegranteController::class, "postApuntarseGrupo"]
+);
 
 
 

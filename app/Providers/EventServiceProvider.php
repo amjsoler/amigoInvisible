@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\NuevoIntegranteCreado;
 use App\Events\NuevosResultadosGuardados;
 use App\Listeners\ComprobarPremiosDecimosDelResultadoGuardado;
+use App\Listeners\EnviarCorreoConfirmacionIntegrante;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -14,7 +16,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-
+        NuevoIntegranteCreado::class => [
+            EnviarCorreoConfirmacionIntegrante::class
+        ]
     ];
 
     /**

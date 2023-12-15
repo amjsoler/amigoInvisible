@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class IntegranteCrearIntegranteFormRequest extends FormRequest
 {
@@ -23,7 +24,11 @@ class IntegranteCrearIntegranteFormRequest extends FormRequest
     {
         return [
             "nombre" => "required|string|max:100",
-            "correo" => "required|email|unique:integrantes,correo"
+            "correo" => [
+                "required",
+                "email",
+                Rule::unique("integrantes", "correo")->where("grupo", $this->grupo->id)
+            ]
         ];
     }
 }

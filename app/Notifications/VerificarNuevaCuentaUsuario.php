@@ -43,8 +43,7 @@ class VerificarNuevaCuentaUsuario extends Notification
             ->line('Primero de todo, ¡bienvenido a ' . env("APP_NAME") . '!')
             ->line('Este mensaje se ha generado de forma automática para que verifiques tu cuenta de usuario y así poder disfrutar de todas las funcionalidades.')
             ->line('Para hacerlo, solo tienes que pulsar en el enlace que encontrarás a continuación:')
-            ->action('Verificar cuenta', $url)
-            ->line('Un saludo desde ' . env("APP_NAME"));
+            ->action('Verificar cuenta', $url);
     }
 
     /**

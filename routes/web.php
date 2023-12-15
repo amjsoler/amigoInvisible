@@ -61,13 +61,18 @@ Route::get("tutorial-eliminar-cuenta", function() {
 /////////////////////////////
 ///// RUTAS INTEGRANTES /////
 /////////////////////////////
+
 Route::get("/grupos/{grupo}/apuntarse/{hash}",
     [IntegranteController::class, "getApuntarseGrupo"]
 );
 
 Route::post("/grupos/{grupo}/apuntarse/{hash}",
     [IntegranteController::class, "postApuntarseGrupo"]
-);
+)->name("postapuntarse");
+
+Route::get("/grupos/{grupo}/aceptar-invitacion/{hash}",
+    [IntegranteController::class, "aceptarInvitacion"]
+)->name("aceptarinvitacion");
 
 
 

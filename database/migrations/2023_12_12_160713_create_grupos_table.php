@@ -24,7 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger("administrador");
             $table->foreign("administrador")->references("id")->on("users");
 
-            $table->string("hash")->default(Hash::make(now()));
+            $table->string("hash")->default(str_replace("/", "", Hash::make(now())));
             $table->boolean("integrantes_asignados")->default(false);
             $table->timestamps();
         });

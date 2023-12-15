@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NuevoIntegranteCreado;
 use App\Http\Requests\IntegranteCrearIntegranteFormRequest;
 use App\Http\Requests\IntegranteCrearIntegrantesFormRequest;
 use App\Models\Grupo;
@@ -22,11 +23,15 @@ class IntegranteController extends Controller
 
     public function crearIntegrantes(Grupo $grupo, IntegranteCrearIntegrantesFormRequest $request)
     {
+        $integrantes = [];
+
         foreach($request->integrantes as $integrante){
-            $this->crearIntegranteIndividual($grupo, $integrante);
+            $integranteAux = $this->crearIntegranteIndividual($grupo, $integrante);
+
+            array_push($integrantes, $integranteAux);
         }
 
-        return response()->json([], 200);
+        return response()->json($integrantes, 200);
     }
 
     public function quitarIntegrante(Grupo $grupo, Integrante $integrante)
@@ -40,12 +45,12 @@ class IntegranteController extends Controller
         return response()->json([], 200);
     }
 
-    public function getApuntarseGrupo(Grupo $grupo, $hash)
+    public function getApuntarseGrupo(Grupo $grupo, string $hash)
     {
         if($grupo->hash != $hash){
             return "El enlace no es válido";
         }else{
-            return view("integrantes.apunarseIntegrante");
+            return view("integrantes.apuntarseIntegrante", compact("grupo"));
         }
     }
 
@@ -56,13 +61,30 @@ class IntegranteController extends Controller
             return "La URL no es válida";
         }
 
-        $integrante = $this->crearIntegranteIndividual($grupo, $request->all());
+        $this->crearIntegranteIndividual($grupo, $request->all());
 
-        return response()->json($integrante, 200);
+        return view("integrantes.apuntarseIntegranteOk");
+    }
+
+    public function aceptarInvitacion(Grupo $grupo, string $hash)
+    {
+        $integrante = Integrante::where("grupo", $grupo->id)
+            ->where("hash_confirmacion", $hash)
+            ->firstOrFail();
+
+        $integrante->confirmado = true;
+        $integrante->save();
+
+        return view("integrantes.invitacionAceptada");
     }
 
     public function realizarAsignaciones(Grupo $grupo)
     {
+        //Primero eliminamos los integrantes que no hayan confirmado
+        Integrante::where("confirmado", false)
+            ->where("grupo", $grupo->id)
+            ->delete();
+
         $integrantes = $grupo->integrantesDelGrupo;
 
         //Duplicamos el array y lo shuffleamos random
@@ -93,6 +115,10 @@ class IntegranteController extends Controller
         }
 
         $integrante->save();
+        $integrante->refresh();
+
+        //Una vez guardado el integrante, creo el evento para enviar una notificación al correo del integrante
+        NuevoIntegranteCreado::dispatch($grupo, $integrante, $integrante->hash_confirmacion);
 
         return $integrante;
     }

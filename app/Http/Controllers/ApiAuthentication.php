@@ -56,7 +56,7 @@ class ApiAuthentication extends Controller
 
                     $response["code"] = 0;
                     $response["status"] = 200;
-                    $response["data"] = ["access_token" => $token, "token_type" => "Bearer"];
+                    $response["data"] = ["access_token" => $token, "token_type" => "Bearer", "usuario_id", $user->id];
                     $response["statusText"] = "ok";
                 }else{
                     $response["code"] = -13;

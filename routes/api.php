@@ -54,6 +54,7 @@ Route::post("/enviar-sugerencia",
 ///////////////////////////////
 /////// RUTAS DE GRUPOS ///////
 ///////////////////////////////
+
 Route::get("/mis-grupos",
 [GrupoController::class, "misGrupos"]
 )->middleware("auth:sanctum", "cuentaVerificada");
@@ -79,6 +80,7 @@ Route::delete("/grupos/{grupo}",
 ////////////////////////////////
 ///// RUTAS DE INTEGRANTES /////
 ////////////////////////////////
+
 Route::post("/grupos/{grupo}/integrantes",
     [IntegranteController::class, "crearIntegrante"]
 );
@@ -119,4 +121,9 @@ Route::post("/log-error", function(Request $request){
  * Añadir fecha para reparto de premios y poder ver las asignaciones
  * Añadir fecha para autoasignación
  * Modalidades de juego
+ * Autoconfirmar cuando un usuario se registra con el correo y lo verifica
+ * Reenviar correo de confirmación de participación
+ * Quitar a participante
+ * REPASAR RUTAS Y CAPAR SEGU´N SEA ADMIN O NO
+ * REPASAR RUTAS Y CAPAR CUANDO YA SE HAYA CELEBRADO EL REPARTO/ASIGNACIÓN
  */

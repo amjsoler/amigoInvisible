@@ -36,7 +36,6 @@ Route::get("/login", function(){
 
 Route::post("/login", function(Request $request){
     if(Auth::attempt(array("email" => $request->get("email"), "password" => $request->get("password")))){
-        return redirect(route("versorteos"));
     }else{
         return redirect()->back();
     }
@@ -70,7 +69,7 @@ Route::post("/grupos/{grupo}/apuntarse/{hash}",
     [IntegranteController::class, "postApuntarseGrupo"]
 )->name("postapuntarse");
 
-Route::get("/grupos/{grupo}/aceptar-invitacion/{hash}",
+Route::get("/grupos/{grupo}/integrantes/{integrante}/aceptar-invitacion/{hash}",
     [IntegranteController::class, "aceptarInvitacion"]
 )->name("aceptarinvitacion");
 
@@ -90,3 +89,8 @@ Route::get("prueba-queued-correo", function(){
 })->middleware("auth:sanctum", "cuentaVerificada")
     ->can("esAdmin", User::class);
 
+Route::get("/grupos/{grupo}/integrantes/celebrar-asignacion",
+    [IntegranteController::class, "realizarAsignaciones"]
+)
+    ->can("esAdministrador", "grupo")
+    ->middleware("auth:sanctum", "cuentaVerificada");

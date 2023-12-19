@@ -27,6 +27,7 @@ class GrupoCrearGrupoFormRequest extends FormRequest
             "precio_minimo" => "nullable|integer|min:0",
             "precio_maximo" => "nullable|integer|min:0",
             "tematica_regalos" => "nullable|string|max:50",
+            "fecha_autoasignacion" => "nullable"
         ];
     }
 }

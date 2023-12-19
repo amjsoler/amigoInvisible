@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Events\NuevoIntegranteCreado;
+use App\Helpers\Helpers;
 use App\Http\Requests\IntegranteCrearIntegranteFormRequest;
 use App\Http\Requests\IntegranteCrearIntegrantesFormRequest;
 use App\Models\Grupo;
 use App\Models\Integrante;
 use App\Models\User;
+use App\Notifications\EnviarCorreoAsignacionIntegrante;
+use App\Notifications\EnviarCorreoConfirmacionIntegranteNotification;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 
 class IntegranteController extends Controller
 {
@@ -45,6 +50,18 @@ class IntegranteController extends Controller
         return response()->json([], 200);
     }
 
+    public function reenviarCorreoConfirmacion(Grupo $grupo, Integrante $integrante)
+    {
+        if($grupo->id != $integrante->grupo){
+            return response()->json([], 400);
+        }
+
+        Notification::route('mail', $integrante->correo)
+            ->notify(new EnviarCorreoConfirmacionIntegranteNotification($grupo, $integrante));
+
+        return response()->json();
+    }
+
     public function getApuntarseGrupo(Grupo $grupo, string $hash)
     {
         if($grupo->hash != $hash){
@@ -66,9 +83,13 @@ class IntegranteController extends Controller
         return view("integrantes.apuntarseIntegranteOk");
     }
 
-    public function aceptarInvitacion(Grupo $grupo, string $hash)
+    public function aceptarInvitacion(Grupo $grupo, Integrante $integrante, string $hash)
     {
-        $integrante = Integrante::where("grupo", $grupo->id)
+        if($grupo->id != $integrante->grupo){
+            return response()->json([], 400);
+        }
+
+        $integrante = Integrante::where("id", $integrante->id)
             ->where("hash_confirmacion", $hash)
             ->firstOrFail();
 
@@ -85,33 +106,42 @@ class IntegranteController extends Controller
             ->where("grupo", $grupo->id)
             ->delete();
 
-        $integrantes = $grupo->integrantesDelGrupo;
+        $integrantes = $grupo->integrantesDelGrupo();
 
-        //Duplicamos el array y lo shuffleamos random
-        $integrantes2 = $integrantes->shuffle();
-
-        foreach($integrantes as $index => $integrante){
-            $integrante->integrante_asignado = $integrantes2->get($index)->id;
+        $asignaciones = Helpers::generarAsignaciones($integrantes->get(["id", "nombre"])->toArray());
+dd($asignaciones);
+        foreach($integrantes as $key=>$integrante){
             $integrante->save();
+
+            //Saco el nombre del asignado
+            $nombreAsignado = $integrantes->filter(function(Integrante $item, int $key) use ($integrante) {
+               if($item->id == $integrante->integrante_asignado) {
+                   return $item;
+               }
+            })->first()->nombre;
+
+            //Encolo correo para el participante actual
+            Notification::route('mail', $integrante->correo)
+                ->notify(new EnviarCorreoAsignacionIntegrante($grupo->nombre, $nombreAsignado));
         }
 
         $grupo->integrantes_asignados = true;
         $grupo->save();
 
-        return response()->json($integrantes, 200);
+        return response()->json();
     }
 
     private function crearIntegranteIndividual(Grupo $grupo, array $request)
     {
         $integrante = new Integrante($request);
         $integrante->grupo = $grupo->id;
+        $integrante->hash_confirmacion = str_replace("/", "", Hash::make(now()));
 
         //Compruebo si existe el correo registrado en la tabla de usuarios y lo asigno
         $user = User::where("email", $request["correo"])->first();
 
         if($user){
             $integrante->usuario = $user->id;
-            $integrante->confirmado = true;
         }
 
         $integrante->save();

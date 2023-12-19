@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\ComprobarAsignacionesAutomaticas;
 use App\Jobs\EsnifarResultados;
 use App\Jobs\EsnifarSorteos;
 use Illuminate\Console\Scheduling\Schedule;
@@ -14,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-
+        $schedule->job(new ComprobarAsignacionesAutomaticas())->everyMinute();
     }
 
     /**

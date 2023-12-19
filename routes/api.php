@@ -97,6 +97,11 @@ Route::post("/grupos/{grupo}/integrantes/creacion-masiva",
     ->can("esAdministrador", "grupo")
     ->middleware("auth:sanctum", "cuentaVerificada");
 
+Route::get("/grupos/{grupo}/integrantes/{integrante}/reenviar-correo-confirmacion",
+    [IntegranteController::class, "reenviarCorreoConfirmacion"]
+)
+    ->can("esAdministrador", "grupo")
+    ->middleware("auth:sanctum", "cuentaVerificada");
 
 Route::get("/grupos/{grupo}/integrantes/celebrar-asignacion",
     [IntegranteController::class, "realizarAsignaciones"]
@@ -118,12 +123,11 @@ Route::post("/log-error", function(Request $request){
 /*
  * Permitir añadir excepciones a personas
  * Quitar excepciones a personas
- * Añadir fecha para reparto de premios y poder ver las asignaciones
  * Añadir fecha para autoasignación
  * Modalidades de juego
- * Autoconfirmar cuando un usuario se registra con el correo y lo verifica
- * Reenviar correo de confirmación de participación
- * Quitar a participante
  * REPASAR RUTAS Y CAPAR SEGU´N SEA ADMIN O NO
  * REPASAR RUTAS Y CAPAR CUANDO YA SE HAYA CELEBRADO EL REPARTO/ASIGNACIÓN
+ * LLamada a la acción para registrarse alegando que podrá excluir gente ahí
+ * Reiniciar grupo y volver a jugar
+ * proyeteger los datos que se devuelven en el array de grupos (no mostrar users asignados)
  */

@@ -72,7 +72,7 @@ class EnviarCorreoConfirmacionIntegranteNotification extends Notification implem
             ->lineIf(!empty($tematica), $tematica)
             ->lineIf(!empty($fecha_autoasignacion), $fecha_autoasignacion)
             ->line("Si quieres aceptar y entrar en este grupo, simplemente tienes que pulsar el botón que encontrarás a continuación:")
-            ->action("Aceptar invitación", route("aceptarinvitacion", array("grupo" => $this->grupo->id, "hash" => $this->integrante->hash_confirmacion)));
+            ->action("Aceptar invitación", route("aceptarinvitacion", array("grupo" => $this->grupo->id, "integrante" => $this->integrante->id, "hash" => $this->integrante->hash_confirmacion)));
     }
 
     /**

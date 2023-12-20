@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GrupoCrearGrupoFormRequest;
 use App\Models\Grupo;
+use Illuminate\Http\Request;
 
 class GrupoController extends Controller
 {
@@ -49,5 +50,20 @@ class GrupoController extends Controller
             [],
             200
         );
+    }
+
+    public function reiniciarGrupo(Grupo $grupo, Request $request)
+    {
+        //1. Compruebo si el admin quiere quitar a los participantes
+        if($request->get("reiniciar_participantes")){
+            $participantes = $grupo->integrantesDelGrupo()->delete();
+        }
+
+        //2. Ahora marco el grupo como no asignado
+        $grupo->integrantes_asignados = false;
+        $grupo->fecha_autoasignacion = null;
+        $grupo->save();
+
+        return response()->json(Grupo::find($grupo->id)->with("integrantesDelGrupo")->first(), 200);
     }
 }

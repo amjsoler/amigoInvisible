@@ -75,6 +75,11 @@ Route::delete("/grupos/{grupo}",
     ->can("esAdministrador", "grupo")
     ->middleware("auth:sanctum", "cuentaVerificada");
 
+Route::post("/grupos/{grupo}/reiniciar-grupo",
+    [GrupoController::class, "reiniciarGrupo"]
+)
+    ->can("esAdministrador", "grupo")
+    ->middleware("auth:sanctum", "cuentaVerificada");
 
 
 ////////////////////////////////
@@ -83,31 +88,31 @@ Route::delete("/grupos/{grupo}",
 
 Route::post("/grupos/{grupo}/integrantes",
     [IntegranteController::class, "crearIntegrante"]
-);
+)->middleware("grupoSinAsignar");
 
 Route::delete("/grupos/{grupo}/integrantes/{integrante}",
     [IntegranteController::class, "quitarIntegrante"]
 )
     ->can("administradorQuitaIntegrante", ["grupo", "integrante"])
-    ->middleware("auth:sanctum", "cuentaVerificada");
+    ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");
 
 Route::post("/grupos/{grupo}/integrantes/creacion-masiva",
     [IntegranteController::class, "crearIntegrantes"]
 )
     ->can("esAdministrador", "grupo")
-    ->middleware("auth:sanctum", "cuentaVerificada");
+    ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");
 
 Route::get("/grupos/{grupo}/integrantes/{integrante}/reenviar-correo-confirmacion",
     [IntegranteController::class, "reenviarCorreoConfirmacion"]
 )
     ->can("esAdministrador", "grupo")
-    ->middleware("auth:sanctum", "cuentaVerificada");
+    ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");
 
 Route::get("/grupos/{grupo}/integrantes/celebrar-asignacion",
     [IntegranteController::class, "realizarAsignaciones"]
 )
     ->can("esAdministrador", "grupo")
-    ->middleware("auth:sanctum", "cuentaVerificada");
+    ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");
 
 ///////////////////////////////////////
 /////// RUTAS DE LOG DE ERRORES ///////
@@ -123,11 +128,8 @@ Route::post("/log-error", function(Request $request){
 /*
  * Permitir añadir excepciones a personas
  * Quitar excepciones a personas
- * Añadir fecha para autoasignación
  * Modalidades de juego
  * REPASAR RUTAS Y CAPAR SEGU´N SEA ADMIN O NO
- * REPASAR RUTAS Y CAPAR CUANDO YA SE HAYA CELEBRADO EL REPARTO/ASIGNACIÓN
  * LLamada a la acción para registrarse alegando que podrá excluir gente ahí
- * Reiniciar grupo y volver a jugar
  * proyeteger los datos que se devuelven en el array de grupos (no mostrar users asignados)
  */

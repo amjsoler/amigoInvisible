@@ -63,15 +63,17 @@ Route::get("tutorial-eliminar-cuenta", function() {
 
 Route::get("/grupos/{grupo}/apuntarse/{hash}",
     [IntegranteController::class, "getApuntarseGrupo"]
-);
+)->middleware("grupoSinAsignar");
 
 Route::post("/grupos/{grupo}/apuntarse/{hash}",
     [IntegranteController::class, "postApuntarseGrupo"]
-)->name("postapuntarse");
+)->middleware("grupoSinAsignar")
+    ->name("postapuntarse");
 
 Route::get("/grupos/{grupo}/integrantes/{integrante}/aceptar-invitacion/{hash}",
     [IntegranteController::class, "aceptarInvitacion"]
-)->name("aceptarinvitacion");
+)->middleware("grupoSinAsignar")
+    ->name("aceptarinvitacion");
 
 
 
@@ -93,4 +95,4 @@ Route::get("/grupos/{grupo}/integrantes/celebrar-asignacion",
     [IntegranteController::class, "realizarAsignaciones"]
 )
     ->can("esAdministrador", "grupo")
-    ->middleware("auth:sanctum", "cuentaVerificada");
+    ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");

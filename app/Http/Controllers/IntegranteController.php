@@ -108,21 +108,24 @@ class IntegranteController extends Controller
 
         $integrantes = $grupo->integrantesDelGrupo();
 
+        //1. Primero saco mis asignaciones random
         $asignaciones = Helpers::generarAsignaciones($integrantes->get(["id", "nombre"])->toArray());
-dd($asignaciones);
-        foreach($integrantes as $key=>$integrante){
+
+        //2. Ahora recorro los integrantes y voy guardando las asociaciones
+        $integrantes = $integrantes->get();
+
+        foreach($integrantes as $integrante){
+            $auxArray = array_filter($asignaciones, function($value) use ($integrante){
+                 return $value["integrante"] == $integrante->id;
+            });
+
+            $auxArray = array_shift($auxArray);
+            $integrante->integrante_asignado = $auxArray["integrante_asignado"];
             $integrante->save();
 
-            //Saco el nombre del asignado
-            $nombreAsignado = $integrantes->filter(function(Integrante $item, int $key) use ($integrante) {
-               if($item->id == $integrante->integrante_asignado) {
-                   return $item;
-               }
-            })->first()->nombre;
-
-            //Encolo correo para el participante actual
+            //3. Mandamos correo con el integrante que le ha tocado al usuario
             Notification::route('mail', $integrante->correo)
-                ->notify(new EnviarCorreoAsignacionIntegrante($grupo->nombre, $nombreAsignado));
+                ->notify(new EnviarCorreoAsignacionIntegrante($grupo->nombre, $auxArray["nombre_integrante_asignado"]));
         }
 
         $grupo->integrantes_asignados = true;

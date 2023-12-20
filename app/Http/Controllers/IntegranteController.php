@@ -11,6 +11,7 @@ use App\Models\Integrante;
 use App\Models\User;
 use App\Notifications\EnviarCorreoAsignacionIntegrante;
 use App\Notifications\EnviarCorreoConfirmacionIntegranteNotification;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 
@@ -64,39 +65,54 @@ class IntegranteController extends Controller
 
     public function getApuntarseGrupo(Grupo $grupo, string $hash)
     {
+        $response = array();
+
         if($grupo->hash != $hash){
-            return "El enlace no es válido";
+            $response["code"] = -1;
         }else{
-            return view("integrantes.apuntarseIntegrante", compact("grupo"));
+            $response["code"] = 0;
         }
+
+        return view("integrantes.apuntarseIntegrante", compact("grupo"))->with("response", $response);
     }
 
     public function postApuntarseGrupo(Grupo $grupo, $hash, IntegranteCrearIntegranteFormRequest $request)
     {
+        $response = [];
+
         if($grupo->hash != $hash)
         {
-            return "La URL no es válida";
+            $response["code"] = -1;
+        }else{
+            $this->crearIntegranteIndividual($grupo, $request->all());
+            $response["code"] = 0;
         }
 
-        $this->crearIntegranteIndividual($grupo, $request->all());
-
-        return view("integrantes.apuntarseIntegranteOk");
+        return view("integrantes.apuntarseIntegranteOk", compact("response"));
     }
 
     public function aceptarInvitacion(Grupo $grupo, Integrante $integrante, string $hash)
     {
-        if($grupo->id != $integrante->grupo){
-            return response()->json([], 400);
+        $response["code"] = 0;
+
+        try{
+
+            if($grupo->id != $integrante->grupo){
+                $response["code"] = -2;
+            }
+
+            $integrante = Integrante::where("id", $integrante->id)
+                ->where("hash_confirmacion", $hash)
+                ->firstOrFail();
+
+            $integrante->confirmado = true;
+            $integrante->save();
+        }
+        catch(Exception $e){
+            $response["code"] = -1;
         }
 
-        $integrante = Integrante::where("id", $integrante->id)
-            ->where("hash_confirmacion", $hash)
-            ->firstOrFail();
-
-        $integrante->confirmado = true;
-        $integrante->save();
-
-        return view("integrantes.invitacionAceptada");
+        return view("integrantes.invitacionAceptada", compact("response"));
     }
 
     public function realizarAsignaciones(Grupo $grupo)

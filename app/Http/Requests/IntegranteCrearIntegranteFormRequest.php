@@ -31,4 +31,16 @@ class IntegranteCrearIntegranteFormRequest extends FormRequest
             ]
         ];
     }
+
+    public function messages()
+    {
+        return [
+            "nombre.required" => "Debes especificar el nombre con el que participas",
+            "nombre.string" => "El nombre debe ser una cadena válida ¿Contiene algún carácter extraño?",
+            "nombre.max" => "El nombre es muy largo",
+            "correo.required" => "Debes especificar un correo para enviarte la confirmación",
+            "correo.email" => "El correo no tiene un formato correcto",
+            "correo.unique" => "El correo ya está inscrito en este grupo. Habla con el administrador"
+        ];
+    }
 }

@@ -12,6 +12,7 @@ class Integrante extends Model
 
     protected $fillable = ["nombre", "correo"];
     protected $guarded = ["grupo", "usuario", "confirmado", "hash_confirmacion", "integrante_asignado"];
+    protected $hidden = ["integrante_asignado"];
 
     public function grupoPerteneciente() : BelongsTo
     {

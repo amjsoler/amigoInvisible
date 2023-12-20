@@ -13,9 +13,10 @@ use Illuminate\Support\Facades\Route;
 /////// RUTAS DE CUENTA ///////
 ///////////////////////////////
 
-Route::get("/con-sesion", function(){
+Route::get("/", function(){
     return "Tienes una sesión iniciada";
-})->middleware("auth:sanctum")->name("consesion");
+})->middleware("auth:sanctum")
+->name("base");
 
 Route::get("verificar-cuenta/{token}",
     [Authentication::class, "verificarCuentaConToken"]
@@ -36,6 +37,7 @@ Route::get("/login", function(){
 
 Route::post("/login", function(Request $request){
     if(Auth::attempt(array("email" => $request->get("email"), "password" => $request->get("password")))){
+        return redirect()->route("base");
     }else{
         return redirect()->back();
     }
@@ -90,9 +92,3 @@ Route::get("prueba-queued-correo", function(){
     User::where("email", "amjsoler@gmail.com")->first()->notify(new PruebaQueuedBorrar());
 })->middleware("auth:sanctum", "cuentaVerificada")
     ->can("esAdmin", User::class);
-
-Route::get("/grupos/{grupo}/integrantes/celebrar-asignacion",
-    [IntegranteController::class, "realizarAsignaciones"]
-)
-    ->can("esAdministrador", "grupo")
-    ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");

@@ -30,4 +30,20 @@ class GrupoCrearGrupoFormRequest extends FormRequest
             "fecha_autoasignacion" => "nullable"
         ];
     }
+
+    public function messages()
+    {
+        return [
+            "nombre.required" => "Debes especificar un nombre para tu grupo",
+            "nombre.max" => "El nombre es muy largo",
+            "descripcion.string" => "La descripción no es válida ¿contiene caracteres extraños?",
+            "descripcion.max" => "La descripción es muy larga",
+            "precio_minimo.integer" => "El precio mínimo tiene que ser un número sin decimales",
+            "precio_minimo.min" => "El precio mínimo no puede ser negativo",
+            "precio_maximo.integer" => "El precio máximo debe ser un número sin decimales",
+            "precio_maximo.min" => "El precio máximo no puede ser negativo",
+            "tematica_regalos.string" => "La temática de los regalos no es válida ¿contiene caracteres extraños?",
+            "tematica_regalos.max" => "La temática de los regalos es demasiado larga",
+        ];
+    }
 }

@@ -4,7 +4,6 @@ use App\Http\Controllers\ApiAuthentication;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\IntegranteController;
 use App\Http\Controllers\UserController;
-use App\Models\Grupo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;

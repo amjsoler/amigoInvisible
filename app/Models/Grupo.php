@@ -14,8 +14,19 @@ class Grupo extends Model
     protected $fillable = ["nombre", "descripcion", "precio_minimo", "precio_maximo", "tematica_regalos", "fecha_autoasignacion"];
     protected $guarded = ["administrador", "hash", "integrantes_asignados"];
 
+
+
+    //////////////////////
+    ///// RELACIONES /////
+    //////////////////////
+    ///
     public function integrantesDelGrupo() : HasMany
     {
         return $this->hasMany(Integrante::class, "grupo", "id");
+    }
+
+    public function exclusionesDelGrupo() : HasMany
+    {
+        return $this->hasMany(Exclusion::class, "grupo", "id");
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiAuthentication;
+use App\Http\Controllers\ExclusionController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\IntegranteController;
 use App\Http\Controllers\UserController;
@@ -111,6 +112,18 @@ Route::get("/grupos/{grupo}/integrantes/celebrar-asignacion",
     [IntegranteController::class, "realizarAsignaciones"]
 )
     ->can("esAdministrador", "grupo")
+    ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");
+
+
+Route::post("/grupos/{grupo}/integrantes/crear-exclusion",
+    [ExclusionController::class, "store"]
+)
+    ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar", "usuarioApuntadoAGrupo");
+
+Route::delete("/grupos/{grupo}/integrantes/quitar-exclusion/{exclusion}",
+    [ExclusionController::class, "destroy"]
+)
+    ->can("usuarioQuitaExclusion", ["exclusion", "grupo"])
     ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");
 
 ///////////////////////////////////////

@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Exclusion;
 use App\Models\Sorteo;
 use App\Models\User;
+use App\Policies\ExclusionPolicy;
 use App\Policies\SorteoPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;

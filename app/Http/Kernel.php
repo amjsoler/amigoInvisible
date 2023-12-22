@@ -6,6 +6,7 @@ use App\Http\Middleware\ApiAuthTokenGetUser;
 use App\Http\Middleware\ComprobarCuentaVerificada;
 use App\Http\Middleware\ComprobarGrupoAsignado;
 use App\Http\Middleware\ComprobarTokenFirebase;
+use App\Http\Middleware\UsuarioApuntadoAGrupo;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -29,7 +30,8 @@ class Kernel extends HttpKernel
 
     protected $routeMiddleware = [
         'cuentaVerificada' => ComprobarCuentaVerificada::class,
-        'grupoSinAsignar' => ComprobarGrupoAsignado::class
+        'grupoSinAsignar' => ComprobarGrupoAsignado::class,
+        "usuarioApuntadoAGrupo" => UsuarioApuntadoAGrupo::class
     ];
 
     /**

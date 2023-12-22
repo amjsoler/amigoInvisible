@@ -6,6 +6,7 @@ use App\Events\NuevoIntegranteCreado;
 use App\Helpers\Helpers;
 use App\Http\Requests\IntegranteCrearIntegranteFormRequest;
 use App\Http\Requests\IntegranteCrearIntegrantesFormRequest;
+use App\Models\Exclusion;
 use App\Models\Grupo;
 use App\Models\Integrante;
 use App\Models\User;
@@ -117,6 +118,8 @@ class IntegranteController extends Controller
 
     public function realizarAsignaciones(Grupo $grupo)
     {
+        $response = [];
+
         //Primero eliminamos los integrantes que no hayan confirmado
         Integrante::where("confirmado", false)
             ->where("grupo", $grupo->id)
@@ -124,30 +127,41 @@ class IntegranteController extends Controller
 
         $integrantes = $grupo->integrantesDelGrupo();
 
-        //1. Primero saco mis asignaciones random
-        $asignaciones = Helpers::generarAsignaciones($integrantes->get("id")->toArray());
+        $exclusiones = $grupo->exclusionesDelGrupo()->get(["usuario_que_regala", "usuario_excluido"])->toArray();
+        $exclusionesFinales = [];
 
-        //2. Ahora recorro los integrantes y voy guardando las asociaciones
-        $integrantes = $integrantes->get();
-
-        foreach($integrantes as $integrante){
-            $auxArray = array_filter($asignaciones, function($value) use ($integrante){
-                 return $value["integrante"] == $integrante->id;
-            });
-
-            $auxArray = array_shift($auxArray);
-            $integrante->integrante_asignado = $auxArray["integrante_asignado"];
-            $integrante->save();
-
-            //3. Mandamos correo con el integrante que le ha tocado al usuario
-            Notification::route('mail', $integrante->correo)
-                ->notify(new EnviarCorreoAsignacionIntegrante($grupo->nombre, $auxArray["nombre_integrante_asignado"]));
+        foreach($exclusiones as $exclusion){
+            $exclusionesFinales[$exclusion["usuario_que_regala"]][] = $exclusion["usuario_excluido"];
         }
 
-        $grupo->integrantes_asignados = true;
-        $grupo->save();
+        //1. Primero saco mis asignaciones random
+        $asignaciones = Helpers::generarAsignaciones($integrantes->get("id")->toArray(), $exclusionesFinales);
 
-        return response()->json();
+        if($asignaciones["code"] == 0){
+            //2. Ahora recorro los integrantes y voy guardando las asociaciones
+            $integrantes = $integrantes->get();
+            $asignaciones = $asignaciones["data"];
+
+            foreach($integrantes as $integrante){
+                $integrante->integrante_asignado = $asignaciones[$integrante->id];
+                $integrante->save();
+
+                //3. Mandamos correo con el integrante que le ha tocado al usuario
+                Notification::route('mail', $integrante->correo)
+                    ->notify(new EnviarCorreoAsignacionIntegrante($grupo->nombre, $integrantes->where("id", $asignaciones[$integrante->id])->first()->nombre));
+            }
+
+            $grupo->integrantes_asignados = true;
+            $grupo->save();
+
+            $response["status"] = 200;
+            $response["data"] = "Las asignaciones se han generado correctamente";
+        }else{
+            $response["status"] = 400;
+            $response["data"] = "No se pueden generar las asignaciones";
+        }
+
+        return response()->json($response["data"], $response["status"]);
     }
 
     private function crearIntegranteIndividual(Grupo $grupo, array $request)

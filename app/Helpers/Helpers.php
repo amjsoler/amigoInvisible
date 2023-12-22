@@ -13,7 +13,7 @@ class Helpers
      * -1: Excepción
      * -2: No hay combinaciones posibles
      */
-    public static function generarAsignaciones(array $integrantes) : array
+    public static function generarAsignaciones(array $integrantes, array $exclusiones = null) : array
     {
         $response["code"] = 0;
         $response["data"] = [];
@@ -35,20 +35,12 @@ class Helpers
         }
 
         //2. Quitar las exclusiones ya creadas
-        //TODO
-        $exclusiones = [
-            "62" => [
-                63,64
-            ],
-            "64" => [
-                62
-            ],
-        ];
-
-        //Quitamos las exclusiones de la matriz
-        foreach($exclusiones as $key=>$exclusion){
-            foreach($exclusion as $keyValue=>$value){
-                array_splice($matriz[$key], array_search($value, $matriz[$key]), 1);
+        if($exclusiones){
+            //Quitamos las exclusiones de la matriz
+            foreach($exclusiones as $key=>$exclusion){
+                foreach($exclusion as $keyValue=>$value){
+                    array_splice($matriz[$key], array_search($value, $matriz[$key]), 1);
+                }
             }
         }
 
@@ -89,8 +81,6 @@ class Helpers
             $response["code"] = 0;
             $response["data"] = $asociacionesFinales;
         }
-
-        dd($response);
 
         return $response;
     }

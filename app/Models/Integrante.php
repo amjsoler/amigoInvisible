@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Integrante extends Model
 {
@@ -17,6 +18,11 @@ class Integrante extends Model
     public function grupoPerteneciente() : BelongsTo
     {
         return $this->belongsTo(Grupo::class, "grupo", "id");
+    }
+
+    public function exclusionesDelIntegrante() : HasMany
+    {
+        return $this->hasMany(Exclusion::class, "usuario_que_regala", "id");
     }
 }
 

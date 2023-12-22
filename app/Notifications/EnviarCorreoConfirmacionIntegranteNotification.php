@@ -8,6 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Carbon;
 
 class EnviarCorreoConfirmacionIntegranteNotification extends Notification implements ShouldQueue
 {
@@ -62,7 +63,7 @@ class EnviarCorreoConfirmacionIntegranteNotification extends Notification implem
 
         $fecha_autoasignacion = "";
         if(isset($this->grupo->fecha_autoasignacion)){
-            $fecha_autoasignacion = "Tienes hasta el " . $this->grupo->fecha_autoasignacion . " para aceptar esta invitación. Si no aceptas, no se te incluirá en las asignaciones.";
+            $fecha_autoasignacion = "La asignación de participantes se hará de forma automática el día " . Carbon::parse($this->grupo->fecha_autoasignacion)->format("d/m/Y") . " a las " . Carbon::parse($this->grupo->fecha_autoasignacion)->format("H:i") . ". Si tu participación no está confirmada para entonces, el sistema te excluirá del reparto y no podrás participar en este grupo";
         }
 
         return (new MailMessage)

@@ -125,7 +125,7 @@ class IntegranteController extends Controller
         $integrantes = $grupo->integrantesDelGrupo();
 
         //1. Primero saco mis asignaciones random
-        $asignaciones = Helpers::generarAsignaciones($integrantes->get(["id", "nombre"])->toArray());
+        $asignaciones = Helpers::generarAsignaciones($integrantes->get("id")->toArray());
 
         //2. Ahora recorro los integrantes y voy guardando las asociaciones
         $integrantes = $integrantes->get();

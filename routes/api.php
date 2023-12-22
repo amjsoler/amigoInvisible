@@ -127,8 +127,6 @@ Route::post("/log-error", function(Request $request){
 /*
  * Permitir añadir excepciones a personas
  * Quitar excepciones a personas
- * Modalidades de juego
- * REPASAR RUTAS Y CAPAR SEGU´N SEA ADMIN O NO
+ * Modalidades de juego (Normal, ruleta de regalos, deseos del amigo invisible)
  * LLamada a la acción para registrarse alegando que podrá excluir gente ahí
- * proyeteger los datos que se devuelven en el array de grupos (no mostrar users asignados)
  */

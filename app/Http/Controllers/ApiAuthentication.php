@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Notifications\RecuperarCuenta;
 use App\Notifications\VerificarNuevaCuentaUsuario;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -116,7 +117,7 @@ class ApiAuthentication extends Controller
      * -13: Error al intentar iniciar sesión
      * -14: No se ha podido mandar el mail de validación
      */
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request) : JSONResponse
     {
         $response = [
             "status" => "",

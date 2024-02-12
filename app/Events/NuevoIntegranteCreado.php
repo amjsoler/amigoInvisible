@@ -4,7 +4,6 @@ namespace App\Events;
 
 use App\Models\Grupo;
 use App\Models\Integrante;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -14,9 +13,6 @@ class NuevoIntegranteCreado
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
     public function __construct(public Grupo $grupo, public Integrante $integrante)
     {
         //

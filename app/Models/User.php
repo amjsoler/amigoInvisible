@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,6 +27,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'alertasporcorreo',
+        'alertaspornotificacion'
     ];
 
     /**
@@ -38,6 +39,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verified_at',
+        'firebasetoken',
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
 
     /**

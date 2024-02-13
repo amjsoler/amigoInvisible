@@ -55,9 +55,12 @@ class ApiAuthentication extends Controller
                     $user = $userResponse["data"];
                     $token = $user->createToken("authToken")->plainTextToken;
 
+                    $user->access_token = $token;
+                    $user->token_type = "Bearer";
+
                     $response["code"] = 0;
                     $response["status"] = 200;
-                    $response["data"] = ["access_token" => $token, "token_type" => "Bearer", "usuario_id", $user->id];
+                    $response["data"] = $user;
                     $response["statusText"] = "ok";
                 }else{
                     $response["code"] = -13;
@@ -73,8 +76,8 @@ class ApiAuthentication extends Controller
                 }
             }else{
                 $response["code"] = -12;
-                $response["status"] = 401;
-                $response["data"] = "Unauthorized";
+                $response["status"] = 462;
+                $response["data"] = "¿La contraseña es correcta?";
                 $response["statusText"] = "Unauthorized";
             }
         }
@@ -149,8 +152,9 @@ class ApiAuthentication extends Controller
 
                 if($inicioSesion){
                     $token = $user->createToken("authToken")->plainTextToken;
-                    $user["access_token"] = $token;
-                    $user["token_type"] = "Bearer";
+                    $user->refresh();
+                    $user->access_token = $token;
+                    $user->token_type = "Bearer";
 
                     //Mandando notificación con el enlace
                     $resultMandarCorreo = $this->mandarCorreoVerificacionCuenta();

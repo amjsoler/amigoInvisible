@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Hash;
 
-class VerificarNuevaCuentaUsuario extends Notification
+class VerificarNuevaCuentaUsuario extends Notification implements ShouldQueue
 {
     use Queueable;
 

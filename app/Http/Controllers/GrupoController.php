@@ -12,7 +12,6 @@ class GrupoController extends Controller
     public function misGrupos()
     {
         $misGrupos = Grupo::with("integrantesDelGrupo.exclusionesDelIntegrante")
-            //->where("administrador", auth()->user()->id)
             ->WhereHas("integrantesDelGrupo", function($query){
                 $query->where("usuario", auth()->user()->id);
             })

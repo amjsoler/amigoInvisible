@@ -15,11 +15,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::post("/iniciar-sesion",
     [ApiAuthentication::class, "login"]
-)->middleware("guest");
+)
+    ->middleware("guest")
+    ->name("login");
 
 Route::post("/registrarse",
     [ApiAuthentication::class, "register"]
-)->middleware("guest");
+)
+    ->middleware("guest")
+    ->name("register");
 
 Route::post("/recuperar-cuenta",
     [ApiAuthentication::class, "recuperarCuenta"]
@@ -57,11 +61,15 @@ Route::post("/enviar-sugerencia",
 
 Route::get("/mis-grupos",
 [GrupoController::class, "misGrupos"]
-)->middleware("auth:sanctum", "cuentaVerificada");
+)
+    ->middleware("auth:sanctum", "cuentaVerificada")
+    ->name("mis-grupos");
 
 Route::post("/grupos",
     [GrupoController::class, "crearGrupo"]
-)->middleware("auth:sanctum", "cuentaVerificada");
+)
+    ->middleware("auth:sanctum", "cuentaVerificada")
+    ->name("crear-grupo");
 
 Route::post("/grupos/{grupo}",
     [GrupoController::class, "editarGrupo"]

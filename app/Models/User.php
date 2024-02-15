@@ -54,6 +54,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'alertasporcorreo' => "boolean",
+        "alertaspornotificacion" => "boolean"
+
     ];
 
     //////////////////////
@@ -494,7 +497,8 @@ class User extends Authenticatable
     public static function guardarAjustesCuentaUsuario(
         int $userId,
         bool $alertasPorCorreo,
-        bool $alertasPorNotificacion)
+        bool $alertasPorNotificacion,
+        string $name)
     {
         $response = [
             "code" => "",
@@ -515,9 +519,11 @@ class User extends Authenticatable
             if($result){
                 $result->alertasporcorreo = $alertasPorCorreo;
                 $result->alertaspornotificacion = $alertasPorNotificacion;
+                $result->name = $name;
 
                 if($result->save()){
                     $response["code"] = 0;
+                    $response["data"] = $result;
                 }
                 else{
                     $response["code"] = -3;

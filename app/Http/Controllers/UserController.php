@@ -171,6 +171,7 @@ class UserController extends Controller
                 auth()->user()->id,
                 $request->get("alertasporcorreo"),
                 $request->get("alertaspornotificacion"),
+                $request->get("name")
             );
 
             if($resultGuardarAjustes["code"] == 0){

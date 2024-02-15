@@ -73,8 +73,9 @@ class AjustesCuentaFormRequest extends FormRequest
     public function rules(): array
     {
         return [
+            "name" => "required|string",
             "alertasporcorreo" => "required|boolean",
-            "alertaspornotificacion" => "required|boolean"
+            "alertaspornotificacion" => "required|boolean",
         ];
     }
 

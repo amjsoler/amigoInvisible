@@ -14,7 +14,7 @@ class Grupo extends Model
     protected $fillable = ["nombre", "descripcion", "precio_minimo", "precio_maximo", "tematica_regalos", "fecha_autoasignacion"];
     protected $guarded = ["administrador", "hash", "integrantes_asignados"];
 
-
+    protected $hidden = ["updated_at"];
 
     //////////////////////
     ///// RELACIONES /////

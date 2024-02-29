@@ -155,13 +155,11 @@ class IntegranteController extends Controller
             $grupo->save();
 
             $response["status"] = 200;
-            $response["data"] = "Las asignaciones se han generado correctamente";
         }else{
             $response["status"] = 400;
-            $response["data"] = "No se pueden generar las asignaciones";
         }
 
-        return response()->json($response["data"], $response["status"]);
+        return response()->json(null, $response["status"]);
     }
 
     private function crearIntegranteIndividual(Grupo $grupo, array $request)

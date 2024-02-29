@@ -77,3 +77,4 @@ com_crashlytics_export_strings.xml
 
 # ====== VAGRANT ========================================
 .vagrant/
+/public/hot

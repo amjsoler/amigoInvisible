@@ -11,14 +11,15 @@ class GrupoController extends Controller
 {
     public function misGrupos()
     {
-        $misGrupos = Grupo::with("integrantesDelGrupo.exclusionesDelIntegrante")
+        $gruposEnLosQueParticipo = Grupo::with("integrantesDelGrupo.exclusionesDelIntegrante")
             ->WhereHas("integrantesDelGrupo", function($query){
                 $query->where("usuario", auth()->user()->id);
-            })
-            ->get();
+            });
+
+        $gruposSoyPropietario = auth()->user()->misGrupos()->union($gruposEnLosQueParticipo)->get();
 
         return response()->json(
-            $misGrupos,
+            $gruposSoyPropietario,
             200
         );
     }

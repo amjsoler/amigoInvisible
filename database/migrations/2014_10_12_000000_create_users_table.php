@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->string("firebasetoken")->nullable();
+            $table->string("google_id")->nullable();
             $table->boolean("alertasporcorreo")->default(true);
             $table->boolean("alertaspornotificacion")->default(false);
             $table->timestamps();

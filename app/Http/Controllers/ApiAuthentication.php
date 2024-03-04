@@ -10,15 +10,103 @@ use App\Models\AccountVerifyToken;
 use App\Models\RecuperarCuentaToken;
 use App\Models\User;
 use App\Notifications\RecuperarCuenta;
+use App\Notifications\UserRegisteredWithGoogle;
 use App\Notifications\VerificarNuevaCuentaUsuario;
 use Exception;
+use Google_Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class ApiAuthentication extends Controller
 {
+    public function googleLogin(Request $request)
+    {
+        $response = [];
+        $response["data"] = null;
+
+        try {
+            $client = new Google_Client(['client_id' => env("GOOGLE_AUTH_CLIENT_ID")]);
+            $payload = $client->verifyIdToken($request->credential);
+
+            //Si se ha podido verificar correctamente...
+            if ($payload) {
+                Log::debug("Google login: ", $payload);
+
+                $sub = $payload['sub'];
+
+                //Busco el "sub" asociado a algún usuario en la base de datos
+                if(User::where("google_id", $sub)->count() > 0) {
+                    Log::debug("Usuario encontrado con el google id");
+                    //Si lo encuentro, inicio sesión con el usuario
+                    $user = User::where("google_id", $sub)->first();
+
+                    $token = $user->createToken("authToken")->plainTextToken;
+                    $user->refresh();
+                    $user->access_token = $token;
+                    $user->token_type = "Bearer";
+                }
+                else if(User::where("email", $payload["email"])->count() > 0){
+                    Log::debug("Usuario encontrado con el correo");
+                    //Si no lo encuentro, pero encuentro un usuario con el mismo correo, actualizo el "sub" del usuario
+                    $user = User::where("email", $payload["email"])->first();
+                    $user->google_id = $sub;
+                    $user->save();
+
+                    $token = $user->createToken("authToken")->plainTextToken;
+                    $user->refresh();
+                    $user->access_token = $token;
+                    $user->token_type = "Bearer";
+                }else {
+                    Log::debug("Usuario no encontrado. Registrando usuario");
+
+                    //Si no lo encuentro, creo un usuario con los datos de google e inicio sesión con él
+                    $passTemp = time();
+
+                    $user = new User();
+                    $user->name = $payload["name"];
+                    $user->email = $payload["email"];
+                    $user->email_verified_at = now();
+                    $user->password = Hash::make($passTemp);;
+                    $user->google_id = $sub;
+                    $user->save();
+
+                    Auth::attempt(['email' => $user->email, 'password' => $passTemp], true);
+
+                    $token = $user->createToken("authToken")->plainTextToken;
+                    $user->refresh();
+                    $user->access_token = $token;
+                    $user->token_type = "Bearer";
+
+                    Log::debug("Mndando correo...");
+
+                    //Mandando correo donde se adjunte la contraseña temporal
+                    $user->notify(new UserRegisteredWithGoogle($passTemp));
+                }
+
+                $response["data"] = $user;
+                $response["code"] = 0;
+                $response["status"] = 200;
+                $response["statusText"] = "ok";
+            } else {
+                Log::debug("Payload devuelto null");
+
+                //Devuelvo el código de error de fallo en la verificación con google
+                $response["status"] = 464;
+                $response["data"] = null;
+            }
+        }catch(Exception $error) {
+            Log::error($error->getMessage());
+
+            //Devuelvo el código de error de fallo en la verificación con google
+            $response["status"] = 464;
+            $response["data"] = null;
+        }
+
+        return response()->json($response["data"], $response["status"]);
+    }
     /**
      * Método para loguear a un usuario
      *

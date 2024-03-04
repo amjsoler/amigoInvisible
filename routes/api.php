@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Route;
 /////// RUTAS DE AUTENTICACIÓN ///////
 //////////////////////////////////////
 
+Route::post("/google-login",
+    [ApiAuthentication::class, "googleLogin"]
+)
+    ->middleware("guest")
+    ->name("googleLogin");
+
 Route::post("/iniciar-sesion", //TODO
     [ApiAuthentication::class, "login"]
 )

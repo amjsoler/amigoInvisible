@@ -16,7 +16,8 @@ class GrupoController extends Controller
                 $query->where("usuario", auth()->user()->id);
             });
 
-        $gruposSoyPropietario = auth()->user()->misGrupos()->union($gruposEnLosQueParticipo)->get();
+        $gruposSoyPropietario = auth()->user()->misGrupos()->with("integrantesDelGrupo.exclusionesDelIntegrante")
+            ->union($gruposEnLosQueParticipo)->get();
 
         return response()->json(
             $gruposSoyPropietario,

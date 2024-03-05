@@ -2,11 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Exclusion;
-use App\Models\Sorteo;
 use App\Models\User;
-use App\Policies\ExclusionPolicy;
-use App\Policies\SorteoPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -18,9 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        User::class => [
-            UserPolicy::class
-        ]
+        User::class => UserPolicy::class,
     ];
 
     /**

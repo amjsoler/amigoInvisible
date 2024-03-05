@@ -14,9 +14,9 @@ class UserPolicy
         //
     }
 
-    public function esAdmin(User $user): bool
+    public function esAdmin(User $user) : bool
     {
-        if($user->email == env("ADMIN_AUTORIZADO")){
+        if($user->email === env("ADMIN_AUTORIZADO")){
             return true;
         }else{
             return false;

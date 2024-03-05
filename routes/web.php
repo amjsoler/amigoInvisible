@@ -18,9 +18,10 @@ Route::get("/", function(){
 })->middleware("auth:sanctum")
 ->name("base");
 
-Route::get("verificar-cuenta/{token}",//TODO
+Route::get("verificar-cuenta/{token}",
     [Authentication::class, "verificarCuentaConToken"]
-)->name("verificarcuentacontoken");
+)
+    ->name("verificarcuentacontoken");
 
 Route::get("recuperar-cuenta/{token}",//TODO
     [Authentication::class, "recuperarCuentaGet"]

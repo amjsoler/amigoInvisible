@@ -466,6 +466,47 @@ class ApiAuthentication extends Controller
         return $response;
     }
 
+    public function comprobarVerificacionCuenta()
+    {
+$response = [
+            "status" => "200",
+            "code" => "0",
+            "statusText" => "",
+            "data" => []
+        ];
+
+        try{
+            //Log de entrada
+            Log::debug("Entrando al comprobarVerificacionCuenta de ApiAuthentication");
+
+            if(auth()->user()->email_verified_at) {
+                $response["data"]["check"] = true;
+            }else{
+                $response["data"]["check"] = false;
+            }
+        }
+        catch(Exception $e){
+            $response["code"] = -11;
+            $response["status"] = 400;
+            $response["statusText"] = "ko";
+
+            Log::error($e->getMessage(),
+                array(
+                    "repsonse: " => $response
+                )
+            );
+        }
+
+        //Log de salida
+        Log::debug("Saliendo del comprobarVerificacionCuenta de ApiAuthentication",
+            array(
+                "response: " => $response
+            )
+        );
+
+        return response()->json($response["data"], $response["status"]);
+    }
+
     /**
      * Método para que el usuario cambie la contraseña de acceso a la cuenta desde el perfil
      *

@@ -23,11 +23,11 @@ Route::get("verificar-cuenta/{token}",
 )
     ->name("verificarcuentacontoken");
 
-Route::get("recuperar-cuenta/{token}",//TODO
+Route::get("recuperar-cuenta/{token}",
     [Authentication::class, "recuperarCuentaGet"]
 )->name("recuperarcuentaget");
 
-Route::post("recuperar-cuenta",//TODO
+Route::post("recuperar-cuenta",
     [Authentication::class, "recuperarCuentaPost"]
 )->name("recuperarcuentapost");
 
@@ -64,16 +64,16 @@ Route::get("tutorial-eliminar-cuenta", function() {//TODO
 ///// RUTAS INTEGRANTES /////
 /////////////////////////////
 
-Route::get("/grupos/{grupo}/apuntarse/{hash}",//TODO
+Route::get("/grupos/{grupo}/apuntarse/{hash}",
     [IntegranteController::class, "getApuntarseGrupo"]
 )->middleware("grupoSinAsignar");
 
-Route::post("/grupos/{grupo}/apuntarse/{hash}",//TODO
+Route::post("/grupos/{grupo}/apuntarse/{hash}",
     [IntegranteController::class, "postApuntarseGrupo"]
 )->middleware("grupoSinAsignar")
     ->name("postapuntarse");
 
-Route::get("/grupos/{grupo}/integrantes/{integrante}/aceptar-invitacion/{hash}",//TODO
+Route::get("/grupos/{grupo}/integrantes/{integrante}/aceptar-invitacion/{hash}",
     [IntegranteController::class, "aceptarInvitacion"]
 )->middleware("grupoSinAsignar")
     ->name("aceptarinvitacion");

@@ -31,13 +31,13 @@ class GrupoController extends Controller
         $grupo->administrador = auth()->user()->id;
         $grupo->save();
 
-        $administrador = new Integrante();
-        $administrador->nombre = auth()->user()->name;
-        $administrador->correo = auth()->user()->email;
-        $administrador->grupo = $grupo->id;
-        $administrador->usuario = auth()->user()->id;
-        $administrador->confirmado = true;
-        $administrador->save();
+        $integrante = new Integrante();
+        $integrante->nombre = auth()->user()->name;
+        $integrante->correo = auth()->user()->email;
+        $integrante->grupo = $grupo->id;
+        $integrante->usuario = auth()->user()->id;
+        $integrante->confirmado = true;
+        $integrante->save();
 
         $grupo->load("integrantesDelGrupo")->refresh();
 

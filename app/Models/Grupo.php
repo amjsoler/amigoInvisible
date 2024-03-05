@@ -12,9 +12,8 @@ class Grupo extends Model
     use HasFactory;
 
     protected $fillable = ["nombre", "descripcion", "precio_minimo", "precio_maximo", "tematica_regalos", "fecha_autoasignacion"];
-    protected $guarded = ["administrador", "hash", "integrantes_asignados"];
 
-    protected $hidden = ["updated_at"];
+    protected $hidden = ["created_at", "updated_at"];
 
     //////////////////////
     ///// RELACIONES /////

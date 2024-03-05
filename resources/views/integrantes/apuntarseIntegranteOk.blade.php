@@ -3,15 +3,33 @@
     Apuntarse al grupo
 @endsection
 @section("content")
-    <div class="d-flex flex-column justify-content-center h-100 text-center">
+    <div class="flex flex-col justify-center items-center space-y-2">
         @if($response["code"] == 0)
-            <span class="material-symbols-outlined text-success fs-1 fw-bold">done</span>
-            <p><b>Te has apuntado correctamente.</b></p>
-            <p>Recuerda que tu participación no se confirmará hasta que pulses en el enlace que te hemos mandado al correo</p>
+            <p>
+                <svg
+                    class="icon icon-tabler icon-tabler-face-id-error size-16 text-green-500 dark:text-green-400"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8v-2a2 2 0 0 1 2 -2h2" /><path d="M4 16v2a2 2 0 0 0 2 2h2" /><path d="M16 4h2a2 2 0 0 1 2 2v2" /><path d="M16 20h2a2 2 0 0 0 2 -2v-2" /><path d="M9 10l.01 0" /><path d="M15 10l.01 0" /><path d="M9.5 15a3.5 3.5 0 0 0 5 0" /></svg>
+            </p>
+            <p class="text-lg font-semibold text-gray-800 dark:text-white text-center"><b>Te has apuntado correctamente</b></p>
+            <p class="text-gray-950 dark:text-gray-200 text-center">Recuerda que tu participación no se confirmará hasta que pulses en el enlace que te hemos mandado al correo</p>
         @else
-            <span class="material-symbols-outlined text-danger fs-1 fw-bold">close</span>
-            <p><b>Ha habido un problema al apuntarte al grupo</b></p>
-            <p>Prueba de nuevo y si el problema persiste, ponte en contacto con nosotros</p>
+            <p class="text-gray-800 dark:text-gray-200">
+                <svg
+                    class="icon icon-tabler icon-tabler-face-id-error size-16 text-red-500 dark:text-red-400"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8v-2a2 2 0 0 1 2 -2h2" /><path d="M4 16v2a2 2 0 0 0 2 2h2" /><path d="M16 4h2a2 2 0 0 1 2 2v2" /><path d="M16 20h2a2 2 0 0 0 2 -2v-2" /><path d="M9 10h.01" /><path d="M15 10h.01" /><path d="M9.5 15.05a3.5 3.5 0 0 1 5 0" /></svg>
+            </p>
+            <p class="text-lg font-semibold text-gray-800 dark:text-white text-center"><b>Ha habido un problema al apuntarte al grupo</b></p>
+            <p class="text-gray-950 dark:text-gray-200 text-center">Prueba de nuevo y si el problema persiste, ponte en contacto con nosotros</p>
         @endif
     </div>
 @endsection

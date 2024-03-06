@@ -17,12 +17,15 @@ class ExclusionController extends Controller
         $response["code"] = 0;
         $response["data"] = [];
 
+        //Sacamos las exclusiones del grupo e incluímos la que queremos añadir para ver si es viable
+        $exclusiones = $grupo->exclusionesDelGrupo()->get(["usuario_que_regala", "usuario_excluido"])->toArray();
+        $exclusiones[] = ["usuario_que_regala" => $grupo->integrantesDelGrupo()->where("usuario", auth()->user()->id)->first()->id, "usuario_excluido" => $request->get("usuario_excluido")];
+
         //Primero comprobamos si la exclusión es viable
-        $result = Helpers::generarAsignaciones($grupo->integrantesDelGrupo()->get("id")->toArray());
+        $result = Helpers::generarAsignaciones($grupo->integrantesDelGrupo()->get("id")->toArray(), $exclusiones);
 
         if($result["code"] == 0){
             $exclusion = new Exclusion();
-            //TODO: Crear middleware para comprobar que estas apuntado al grupo
             $exclusion->usuario_que_regala = $grupo->integrantesDelGrupo()->where("usuario", auth()->user()->id)->first()->id;
             $exclusion->usuario_excluido = $request->get("usuario_excluido");
             $exclusion->grupo = $grupo->id;
@@ -32,7 +35,7 @@ class ExclusionController extends Controller
             $response["data"] = $exclusion;
         }
         else{
-            $response["status"] = 400;
+            $response["status"] = 465;
             $response["data"] = "La asignación no es posible";
         }
 

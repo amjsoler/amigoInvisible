@@ -36,11 +36,10 @@ class Helpers
 
         //2. Quitar las exclusiones ya creadas
         if($exclusiones){
-            //Quitamos las exclusiones de la matriz
-            foreach($exclusiones as $key=>$exclusion){
-                foreach($exclusion as $keyValue=>$value){
-                    array_splice($matriz[$key], array_search($value, $matriz[$key]), 1);
-                }
+            foreach($exclusiones as $exclusion){
+                //Busco el valor a exluir en la matriz y si lo encuentro lo elimino
+                $index = array_search($exclusion["usuario_excluido"], $matriz[$exclusion["usuario_que_regala"]]);
+                array_splice($matriz[$exclusion["usuario_que_regala"]], $index, 1);
             }
         }
 

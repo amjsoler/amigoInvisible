@@ -133,12 +133,12 @@ Route::get("/grupos/{grupo}/integrantes/celebrar-asignacion",
     ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");
 
 
-Route::post("/grupos/{grupo}/integrantes/crear-exclusion",//TODO
+Route::post("/grupos/{grupo}/integrantes/crear-exclusion",
     [ExclusionController::class, "store"]
 )
     ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar", "usuarioApuntadoAGrupo");
 
-Route::delete("/grupos/{grupo}/integrantes/quitar-exclusion/{exclusion}",//TODO
+Route::delete("/grupos/{grupo}/integrantes/quitar-exclusion/{exclusion}",
     [ExclusionController::class, "destroy"]
 )
     ->can("usuarioQuitaExclusion", ["exclusion", "grupo"])

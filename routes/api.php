@@ -126,7 +126,7 @@ Route::get("/grupos/{grupo}/integrantes/{integrante}/reenviar-correo-confirmacio
     ->can("esAdministrador", "grupo")
     ->middleware("auth:sanctum", "cuentaVerificada", "grupoSinAsignar");
 
-Route::get("/grupos/{grupo}/integrantes/celebrar-asignacion",//TODO
+Route::get("/grupos/{grupo}/integrantes/celebrar-asignacion",
     [IntegranteController::class, "realizarAsignaciones"]
 )
     ->can("esAdministrador", "grupo")

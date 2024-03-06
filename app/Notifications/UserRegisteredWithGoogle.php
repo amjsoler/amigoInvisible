@@ -37,6 +37,7 @@ class UserRegisteredWithGoogle extends Notification
         $appname = env("APP_NAME");
 
         return (new MailMessage)
+            ->subject("Bienvenido a $appname")
             ->line("Bienvenido a $appname")
             ->line('Tu cuenta ha sido creada correctamente con los datos de tu cuenta de Google.')
             ->line('Si quieres modificar algo, puedes hacerlo desde tu perfil.')

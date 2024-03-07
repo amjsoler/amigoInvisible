@@ -22,7 +22,7 @@ class ExclusionController extends Controller
         $exclusiones[] = ["usuario_que_regala" => $grupo->integrantesDelGrupo()->where("usuario", auth()->user()->id)->first()->id, "usuario_excluido" => $request->get("usuario_excluido")];
 
         //Primero comprobamos si la exclusión es viable
-        $result = Helpers::generarAsignaciones($grupo->integrantesDelGrupo()->get("id")->toArray(), $exclusiones);
+        $result = Helpers::generarAsignaciones($grupo->integrantesDelGrupo()->where("confirmado",true)->get("id")->toArray(), $exclusiones);
 
         if($result["code"] == 0){
             $exclusion = new Exclusion();

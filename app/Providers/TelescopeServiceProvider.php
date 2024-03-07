@@ -16,7 +16,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         Telescope::night();
 
-        //No quiero quitar datos sensibles puesto que el token me vale para identificar al usuario en todo el trayecto de peticiones
+        //No quiero quitar datos sensibles puesto que el token me vale para identificar al usuario en to do el trayecto de peticiones
         //$this->hideSensitiveRequestDetails();
 
         Telescope::filter(function (IncomingEntry $entry) {

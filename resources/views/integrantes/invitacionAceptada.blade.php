@@ -22,6 +22,7 @@
             <section class="space-y-4 mt-10">
                 <p class="text-bold text-white text-center">Recuerda que desde la app puedes añadir excepciones, así, te aseguras que no te toca ese compañero pelma de la oficina...</p>
                 <p class="text-semibold text-gray-200 text-center">Solo tienes que descargar la app y registrarte con el mismo correo con el que estás participando en este grupo</p>
+                <!-- Enlace a la página de descarga de la app -->
             </section>
         @else
             <p class="text-gray-800 dark:text-gray-200">
@@ -36,7 +37,6 @@
             </p>
             <p class="text-lg font-semibold text-gray-800 dark:text-white text-center"><b>Ha habido un problema al confirmar tu participación</b></p>
             <p class="text-gray-950 dark:text-gray-200 text-center">Revisa que has copiado el enlace correctamente y si el problema persiste, ponte en contacto con el administrador. ÉL podrá apuntarte manualmente</p>
-            <!-- TODO Añadir el enlace a la landing de descarga de la app -->
         @endif
     </div>
 @endsection

@@ -39,7 +39,7 @@ class ApiAuthTokenGetUser
 
                 $userID = DB::table("personal_access_tokens")
                     ->where("token", hash("sha256", $token))
-                    //TODO: ->where("expires_at", ">=", now())
+                    ->where("expires_at", ">=", now())
                     ->value("tokenable_id");
 
                 if ($userID > 0) {

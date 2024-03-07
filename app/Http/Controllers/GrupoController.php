@@ -13,7 +13,7 @@ class GrupoController extends Controller
     {
         $gruposEnLosQueParticipo = Grupo::with("integrantesDelGrupo.exclusionesDelIntegrante")
             ->WhereHas("integrantesDelGrupo", function($query){
-                $query->where("usuario", auth()->user()->id);
+                $query->where("usuario", auth()->user()->id)->where("confirmado", true);
             });
 
         $gruposSoyPropietario = auth()->user()->misGrupos()->with("integrantesDelGrupo.exclusionesDelIntegrante")
@@ -21,6 +21,16 @@ class GrupoController extends Controller
 
         return response()->json(
             $gruposSoyPropietario,
+            200
+        );
+    }
+
+    public function verGrupo(Grupo $grupo)
+    {
+        $grupo->load("integrantesDelGrupo.exclusionesDelIntegrante");
+
+        return response()->json(
+            $grupo,
             200
         );
     }

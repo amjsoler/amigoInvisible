@@ -5,6 +5,7 @@ use App\Http\Controllers\ExclusionController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\IntegranteController;
 use App\Http\Controllers\UserController;
+use App\Models\Grupo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -70,10 +71,17 @@ Route::post("/enviar-sugerencia",
 ///////////////////////////////
 
 Route::get("/mis-grupos",
-[GrupoController::class, "misGrupos"]
+    [GrupoController::class, "misGrupos"]
 )
     ->middleware("auth:sanctum", "cuentaVerificada")
     ->name("mis-grupos");
+
+Route::get("/grupos/{grupo}",
+    [GrupoController::class, "verGrupo"]
+)
+    ->middleware("auth:sanctum", "cuentaVerificada")
+    ->can("verGrupo", [Grupo::class, "grupo"])
+    ->name("ver-grupo");
 
 Route::post("/grupos",
     [GrupoController::class, "crearGrupo"]
